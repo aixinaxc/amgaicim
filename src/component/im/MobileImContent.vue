@@ -1,58 +1,55 @@
 <template>
-    <div>
-        <Modal v-model="im_modal" draggable scrollable title="聊天" >
-            <p slot="header" style="text-align:center">
-                <span>{{to_user.name}}</span>
-            </p>
-            <div ref="imContent" style="text-align:center;height: 270px;overflow-y: auto;margin-bottom: 10px" >
-                <!-- Left -->
-                <div v-for="(msg,index) in msg_list">
-                    <div class="sender" v-if="msg.msg_from_id !== from_user.id">
-                        <div>
-                            <Avatar v-if="msg.msg_from_content.icon == '' || msg.msg_from_content.icon == undefined" icon="ios-person" />
-                            <Avatar v-else :src="msg.msg_from_content.icon" />
-                        </div>
-                        <div style="max-width: 260px;text-align: left;word-break:break-all; ">
-                            <div class="left_triangle"></div>
-                            <span style="font-size: 16px" v-if="msg.msg_content_type == 'im_text'">
+    <div style="box-sizing: border-box ;position: relative;height: 100%">
+        <div style="width:100vw;height: 36px;background: lightseagreen;text-align: center;padding: 0 5px;line-height: 36px;position: absolute;z-index: 100" >
+            <span  style="float: left;"><Icon type="ios-arrow-back" size="24"/></span>
+            <span style="font-size: 20px;vertical-align:middle"> jhg</span>
+            <span  style="float: right;"><Icon type="ios-people-outline" size="24" /></span>
+        </div>
+        <div ref="imContent" class="im_content">
+            <!-- Left -->
+            <div v-for="(msg,index) in msg_list">
+                <div class="sender" v-if="msg.msg_from_id !== from_user.id">
+                    <div>
+                        <Avatar v-if="msg.msg_from_content.icon == '' || msg.msg_from_content.icon == undefined" icon="ios-person" />
+                        <Avatar v-else :src="msg.msg_from_content.icon" />
+                    </div>
+                    <div style="max-width: 55vw;text-align: left;word-break:break-all; ">
+                        <div class="left_triangle"></div>
+                        <span style="font-size: 16px" v-if="msg.msg_content_type == 'im_text'">
                             {{msg.msg_content.text}}
                             </span>
-                            <span v-else>
+                        <span v-else>
                             <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 200px;max-height: 150px"  :preview="index"/>
                             </span>
-                        </div>
                     </div>
-                    <!-- Right -->
-                    <div class="receiver" v-else>
-                        <div>
-                            <Avatar v-if="msg.msg_to_content.icon == '' || msg.msg_to_content.icon == undefined" icon="ios-person" />
-                            <Avatar v-else :src="msg.msg_to_content.icon" />
-                        </div>
-                        <div style="max-width: 260px;text-align: left;word-break:break-all;">
-                            <div class="right_triangle"></div>
-                            <span style="font-size: 16px" v-if="msg.msg_content_type == 'im_text'">
+                </div>
+                <!-- Right -->
+                <div class="receiver" v-else>
+                    <div>
+                        <Avatar v-if="msg.msg_to_content.icon == '' || msg.msg_to_content.icon == undefined" icon="ios-person" />
+                        <Avatar v-else :src="msg.msg_to_content.icon" />
+                    </div>
+                    <div style="max-width: 55vw;text-align: left;word-break:break-all;">
+                        <div class="right_triangle"></div>
+                        <span style="font-size: 16px" v-if="msg.msg_content_type == 'im_text'">
                             {{msg.msg_content.text}}
                             </span>
-                            <span v-else>
+                        <span v-else>
                             <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 200px;max-height: 150px" :preview="index"/>
                             </span>
-                        </div>
                     </div>
                 </div>
             </div>
-            <div slot="footer" style="margin: -5px -16px">
+        </div>
+        <div class="im_menu">
+            <div style="width: 100%;background: mediumseagreen;">
                 <div class="wrapper" >
-                    <!---->
-                    <!--emoji-->
                     <EmojiPicker @emoji="insert" :search="search">
                         <div class="emoji-invoker" slot="emoji-invoker" slot-scope="{ events }" v-on="events" style="float: left">
-                            <Icon type="ios-happy-outline" size="24" />
+                            <Icon type="ios-happy-outline" size="36" style="margin-left: 5%"/>
                         </div>
                         <div slot="emoji-picker" slot-scope="{ emojis, insert, display }" >
                             <div class="emoji-picker" >
-                                <!--<div class="emoji-picker__search">
-                                    <input type="text" v-model="search" v-focus>
-                                </div>-->
                                 <div>
                                     <div v-for="(emojiGroup, category) in emojis" :key="category">
                                         <h5>{{ category }}</h5>
@@ -64,66 +61,36 @@
                             </div>
                         </div>
                     </EmojiPicker>
-                    <input type="file" ref="img_file" style="display:none;" @change="sendImg" >
-                    <Icon type="ios-image-outline" size="24" @click="openImgFile" />
-                    <div style="float: right;" @click="openDrawer">
-                        历史消息
-                    </div>
                 </div>
-                <div >
-                    <textarea ref="InputText"  style="border: white 0 solid ;height: 80px;width: 100%;font-size: 16px"  v-focus v-model="im_text"></textarea>
-                </div>
-                <div style="margin-top: 5px">
-                    <Button @click="closeMedal">关闭</Button>
-                    <Button type="primary" @click="sendTxt" >发送</Button>
+                <input type="text" style="outline:none;border:none;width: 75vw;height:48px;background: white;float: left;font-size: 16px;" v-model="im_text"></input>
+                <div style="width: 14vw;background: white;height:48px;color: cornflowerblue;float: right;line-height:48px;text-align: center;font-size: 18px">
+                    <span style="margin-right: 5%" @click="sendTxt">发送</span>
                 </div>
             </div>
-        </Modal>
-
-        <Drawer width="300" title="历史消息" :closable="false" v-model="show_drawer">
-            <div style="height: 95%;overflow-y: auto;margin-bottom: 10px">
-                <!-- Left -->
-                <div v-for="(msg,index) in history_msg_list">
-                    <div style="padding: 5px 0">
-                        <div>{{msg.msg_from_content.name == '' ? '未知': msg.msg_from_content.name}} - {{msg.created_at | formatDate}}</div>
-                        <div>
-                            <span style="font-size: 16px" v-if="msg.msg_content_type == 'im_text'">
-                            {{msg.msg_content.text}}
-                            </span>
-                            <span v-else>
-                            <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 200px;max-height: 150px" :preview="index"/>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <Page :total="Total" :page-size="page_size"  :current="page_num" @on-change="historyMsgList"  />
-        </Drawer>
+        </div>
     </div>
 </template>
 
 <script>
-
     import utils from "../../assets/js/utils";
     import ReconnectingWebSocket from 'reconnecting-websocket';
     const browserMD5File = require('browser-md5-file');
     import EmojiPicker from 'vue-emoji-picker';
     export default {
-        name: "list",
-        inject:["reload"],
-        props:['im_from_user','im_to_user','is_open','im_base_img_path','im_ws_url','im_msg_type','im_msg_list','im_history_msg_list','im_history_msg_total'],
+        name: "MobileImContent",
         components:{
             EmojiPicker
         },
+        props:['im_from_user','im_to_user','is_open','im_base_img_path','im_ws_url','im_msg_type','im_msg_list','im_history_msg_list','im_history_msg_total'],
         data() {
             return {
                 baseImgUrl: this.im_base_img_path,
                 wsUrl: this.im_ws_url,
-                msg_list:this.im_msg_list,
+                msg_list:[],
                 history_msg_list:this.im_history_msg_list,
                 Total:this.im_history_msg_total,
-                from_user: this.im_from_user,
-                to_user:this.im_to_user,
+                from_user: {id:'2',name:'bbb'},
+                to_user:{id:'1',name:'aaa'},
                 msg_type:this.im_msg_type,
                 im_text: '',
                 im_modal:false,
@@ -225,21 +192,21 @@
                     console.log('连接')
                 });
                 this.rws.addEventListener('message', (msg) => {
-                   console.log(msg.data);
-                   let msgData = JSON.parse(msg.data);
+                    console.log(msg.data);
+                    let msgData = JSON.parse(msg.data);
                     console.log(msgData);
-                   if(msgData.msg_type == 'client'){
+                    if(msgData.msg_type == 'client'){
 
-                   }else if(msgData.msg_type == 'p2p'){
-                       if((this.to_user.id == msgData.msg_to_id && this.from_user.id == msgData.msg_from_id) ||
-                           (this.to_user.id == msgData.msg_from_id && this.from_user.id == msgData.msg_to_id) ){
-                           this.msg_list.push(msgData);
-                       }
-                   }else if(msgData.msg_type == 'group'){
+                    }else if(msgData.msg_type == 'p2p'){
+                        if((this.to_user.id == msgData.msg_to_id && this.from_user.id == msgData.msg_from_id) ||
+                            (this.to_user.id == msgData.msg_from_id && this.from_user.id == msgData.msg_to_id) ){
+                            this.msg_list.push(msgData);
+                        }
+                    }else if(msgData.msg_type == 'group'){
                         if(this.to_user.id == msgData.msg_to_id){
                             this.msg_list.push(msgData);
                         }
-                   }
+                    }
                 });
             },
             sendTxt: function(){
@@ -248,6 +215,7 @@
                     this.$Message.error('内容太长,请改为其他方式发送');
                     return;
                 }
+                this.msg_type = 'p2p';
                 if(this.msg_type == 'p2p'){
                     this.msgSend('p2p',this.to_user.id,'im_text',this.msgTextContent(this.im_text));
                 }else if(this.msg_type == 'group'){
@@ -307,7 +275,7 @@
                 msg.msg_to_content = this.userContent(this.to_user.id,this.to_user.name,this.to_user.icon);
                 msg.msg_content_type = msgContentType;
                 msg.msg_content = msgContent;
-                this.rws.send(JSON.stringify(msg));
+                //this.rws.send(JSON.stringify(msg));
                 if(msgType != 'client'){
                     msg.msg_content.file_name = fileUrl;
                     this.msg_list.push(msg);
@@ -338,15 +306,42 @@
 
 <style scoped>
     @import '../../assets/css/im.css';
+    .im_content {
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+        padding: 45px 1% 40px 1%;
+        background: mediumslateblue;
+        word-break: break-all;
+        display: inherit; /** 将对象作为伸缩盒子模型显示 **/
+        overflow: auto; /** 隐藏超出的内容 **/
+    }
+    .im_menu {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        height: 48px;
+        color: #474747;
+        border-top: 1px solid #eee;
+        background-color: darkorchid;
+        align-content: center;
+        max-height: 200px;
+        z-index: 999;
+    }
+
+
+
     /*emoji样式*/
     .wrapper {
         position: relative;
         display: inline-block;
-        width: 100%;
-        height: 24px;
-        text-align:left;
         margin-bottom: 5px;
-        padding: 0 5px;
+        width: 11vw;
+        background: white;
+        height:48px;
+        float: left;
+        line-height:48px;
+        text-align: center
     }
     .emoji-invoker {
         width: 1.5rem;
@@ -364,12 +359,11 @@
         z-index:2;
         font-size: 16px;
         border: 1px solid #ccc;
-        width: 25rem;
+        width: 100vw;
         height: 10rem;
         overflow-y: auto;
-        padding: 1rem;
+        padding: 1px;
         box-sizing: border-box;
-        border-radius: 0.5rem;
         background: #fff;
         box-shadow: 1px 1px 8px #c7dbe6;
     }
