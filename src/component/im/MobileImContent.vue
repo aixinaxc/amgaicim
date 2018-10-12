@@ -1,11 +1,11 @@
 <template>
     <div style="box-sizing: border-box ;position: relative;height: 100%">
-        <div style="width:100vw;height: 36px;background: lightseagreen;text-align: center;padding: 0 5px;line-height: 36px;position: absolute;z-index: 100" >
+        <div style="width:100vw;height: 36px;background: lightseagreen;text-align: center;padding: 0 5px;line-height: 36px;position: absolute;z-index: 100" @click="displayMore">
             <span  style="float: left;"><Icon type="ios-arrow-back" size="24"/></span>
             <span style="font-size: 20px;vertical-align:middle"> jhg</span>
             <span  style="float: right;"><Icon type="ios-people-outline" size="24" /></span>
         </div>
-        <div ref="imContent" class="im_content">
+        <div ref="imContent" class="im_content" @click="displayMore">
             <!-- Left -->
             <div v-for="(msg,index) in msg_list">
                 <div class="sender" v-if="msg.msg_from_id !== from_user.id">
@@ -42,11 +42,11 @@
             </div>
         </div>
         <div class="im_menu">
-            <div style="width: 100%;background: mediumseagreen;">
+            <div style="width: 100%;background: mediumseagreen;" >
                 <div class="wrapper" >
                     <EmojiPicker @emoji="insert" :search="search">
                         <div class="emoji-invoker" slot="emoji-invoker" slot-scope="{ events }" v-on="events" style="float: left">
-                            <Icon type="ios-happy-outline" size="36" style="margin-left: 5%"/>
+                            <Icon type="ios-happy-outline" size="36" style="margin-left: 5%" @click="shoeMore"/>
                         </div>
                         <div slot="emoji-picker" slot-scope="{ emojis, insert, display }" >
                             <div class="emoji-picker" >
@@ -62,10 +62,13 @@
                         </div>
                     </EmojiPicker>
                 </div>
-                <input type="text" style="outline:none;border:none;width: 75vw;height:48px;background: white;float: left;font-size: 16px;" v-model="im_text"></input>
+                <input  type="text" style="outline:none;border:none;width: 75vw;height:48px;background: white;float: left;font-size: 16px;" v-model="im_text" @click="displayMore"></input>
                 <div style="width: 14vw;background: white;height:48px;color: cornflowerblue;float: right;line-height:48px;text-align: center;font-size: 18px">
                     <span style="margin-right: 5%" @click="sendTxt">发送</span>
                 </div>
+            </div>
+            <div style="height:200px;" v-show="more_style == true" tabindex = "0"  >
+                asdasdasd
             </div>
         </div>
     </div>
@@ -99,7 +102,8 @@
                 search: '',
                 page_num:1,
                 page_size:20,
-                time:0
+                time:0,
+                more_style:false
             }
         },
         directives: {
@@ -159,6 +163,20 @@
             }
         },
         methods:{
+            shoeMore: function(){
+                console.log('==============');
+                if(this.more_style == false){
+                    this.more_style = true;
+                }else{
+                    this.more_style = false;
+                }
+            },
+            displayMore: function(){
+                console.log('==============');
+                if(this.more_style == true){
+                    this.more_style = false;
+                }
+            },
             openImMedal: function(){
                 this.im_modal = true;
             },
@@ -211,6 +229,7 @@
             },
             sendTxt: function(){
                 console.log(this.msg_type);
+                this.displayMore();
                 if(this.im_text.length >= 2000){
                     this.$Message.error('内容太长,请改为其他方式发送');
                     return;
@@ -320,13 +339,13 @@
         position: fixed;
         bottom: 0;
         width: 100%;
-        height: 48px;
+        max-height: 48px;
         color: #474747;
         border-top: 1px solid #eee;
         background-color: darkorchid;
         align-content: center;
         max-height: 200px;
-        z-index: 999;
+        z-index: 100;
     }
 
 
@@ -335,7 +354,6 @@
     .wrapper {
         position: relative;
         display: inline-block;
-        margin-bottom: 5px;
         width: 11vw;
         background: white;
         height:48px;
@@ -355,17 +373,16 @@
     }
     .emoji-picker {
         position: absolute;
-        top: -10rem;
+        top: 48px;
         z-index:2;
         font-size: 16px;
-        border: 1px solid #ccc;
+        border-top: 1px solid #ccc;
         width: 100vw;
         height: 10rem;
         overflow-y: auto;
         padding: 1px;
         box-sizing: border-box;
         background: #fff;
-        box-shadow: 1px 1px 8px #c7dbe6;
     }
     .emoji-picker__search {
         display: flex;
