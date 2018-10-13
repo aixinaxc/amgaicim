@@ -5,37 +5,49 @@
                 <span>{{to_user.name}}</span>
             </p>
             <div ref="imContent" style="text-align:center;height: 270px;overflow-y: auto;margin-bottom: 10px" >
-                <!-- Left -->
                 <div v-for="(msg,index) in msg_list">
-                    <div class="sender" v-if="msg.msg_from_id !== from_user.id">
-                        <div>
+                    <!--左侧消息-->
+                    <div  style="float: left;;max-width: 65vw;clear:both;" v-if="msg.msg_from_id !== from_user.id">
+                        <div style="display:inline-block;vertical-align:top;height: 100%;float: left">
                             <Avatar v-if="msg.msg_from_content.icon == '' || msg.msg_from_content.icon == undefined" icon="ios-person" />
                             <Avatar v-else :src="msg.msg_from_content.icon" />
                         </div>
-                        <div style="max-width: 260px;text-align: left;word-break:break-all; ">
-                            <div class="left_triangle"></div>
-                            <span style="font-size: 16px" v-if="msg.msg_content_type == 'im_text'">
-                            {{msg.msg_content.text}}
-                            </span>
-                            <span v-else>
-                            <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 200px;max-height: 150px"  :preview="index"/>
-                            </span>
+                        <div style="display:inline-block;vertical-align:top;max-width: 50vw;margin: 0 0 0 2vw">
+                            <div style="margin-left: 8px">
+                                {{msg.msg_from_content.name}}
+                            </div>
+                            <div class="bubbleItem " v-if="msg.msg_content_type == 'im_text'">     <!--左侧的泡泡-->
+                                <span class="bubble leftBubble">
+                                    {{msg.msg_content.text}}
+                                    <!--<span class="bottomLevel"></span>-->
+                            <span class="topLevel"></span>
+                        </span>
+                            </div>
+                            <div v-else>
+                                <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 50vw;max-height: 40vw"  :preview="index"/>
+                            </div>
                         </div>
                     </div>
-                    <!-- Right -->
-                    <div class="receiver" v-else>
-                        <div>
+                    <!--右侧消息-->
+                    <div  style="float: right;;max-width: 65vw;clear:both;margin: 5px 0" v-else>
+                        <div style="display:inline-block;vertical-align:top;height: 100%;float: right">
                             <Avatar v-if="msg.msg_to_content.icon == '' || msg.msg_to_content.icon == undefined" icon="ios-person" />
                             <Avatar v-else :src="msg.msg_to_content.icon" />
                         </div>
-                        <div style="max-width: 260px;text-align: left;word-break:break-all;">
-                            <div class="right_triangle"></div>
-                            <span style="font-size: 16px" v-if="msg.msg_content_type == 'im_text'">
+                        <div style="display:inline-block;vertical-align:top;max-width: 50vw;margin: 0 2vw 0 0">
+                            <div style="text-align: right;margin-right: 8px">
+                                {{msg.msg_to_content.name}}
+                            </div>
+                            <div class="bubbleItem clearfix" v-if="msg.msg_content_type == 'im_text'">     <!--左侧的泡泡-->
+                                <span class="bubble rightBubble">
                             {{msg.msg_content.text}}
-                            </span>
-                            <span v-else>
-                            <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 200px;max-height: 150px" :preview="index"/>
-                            </span>
+                                    <!--<span class=""></span>-->
+                            <span class="topLevel"></span>
+                        </span>
+                            </div>
+                            <div v-else>
+                                <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 50vw;max-height: 40vw"  :preview="index"/>
+                            </div>
                         </div>
                     </div>
                 </div>

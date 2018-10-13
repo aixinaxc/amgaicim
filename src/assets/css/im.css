@@ -45,3 +45,133 @@
     right:-16px;
     top:3px;
 }
+
+
+.receiverMsg{
+    max-width: 50vw;
+    background-color: green;
+    border-bottom-color:green;/*为了给after伪元素自动继承*/
+    color: #fff;
+    font-size: 14px;
+    padding: 5px 12px 5px 12px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    position: relative;
+    word-break: break-all;
+}
+.receiverMsg::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: inherit;
+    left: -4px; /*向左侧外部延伸箭头box的一半宽度*/
+    position: absolute;
+    transform: rotate(45deg); /*旋转45度*/
+    top:10px; /*箭头在数值方向上居中*/
+}
+
+.senderMsg{
+    max-width: 50vw;
+    background-color: green;
+    border-bottom-color:green;/*为了给after伪元素自动继承*/
+    color: #fff;
+    font-size: 14px;
+    padding: 5px 12px 5px 12px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    position: relative;
+    word-break: break-all;
+}
+.senderMsg::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: inherit;
+    right: -4px; /*向左侧外部延伸箭头box的一半宽度*/
+    position: absolute;
+    transform: rotate(45deg); /*旋转45度*/
+    top:10px; /*箭头在数值方向上居中*/
+}
+
+
+.receiverMsg::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: -24px;
+    top: 0px;
+    border-width: 0 0 20px 20px;
+    border-style: solid;
+    border-left-color: transparent;
+    border-bottom-color:inherit;
+    border-bottom-right-radius: 60px;
+}
+
+
+.bubbleDiv{
+    width: 1000px;
+    margin: 0 auto;
+    height: 1000px;
+    border: 1px solid #4a4f58;
+}
+.bubbleItem{
+    width: 100%;
+}
+.bubble{
+    max-width: 50vw;
+    position: relative;
+    border-radius: 6px;
+    font-size: 14px;
+    padding: 5px 10px;
+    display: inline-block;
+}
+.leftBubble{
+    position: relative;
+    margin-left: 5px;
+    background-color: #f8fdfc;
+}
+.leftBubble .bottomLevel{
+    position: absolute;
+    top: 9px;
+    left: -11px;
+    border-top: 10px solid #00b6b6;
+    border-left: 10px solid transparent;
+}
+.leftBubble .topLevel{
+    position: absolute;
+    top: 10px;
+    left: -8px;
+    border-top: 10px solid #f8fdfc;
+    border-left: 10px solid transparent;
+    z-index: 100;
+}
+.rightBubble{
+    position: relative;
+    margin-right: 5px;
+    float: right;
+    background: #ffffff;
+}
+.rightBubble .bottomLevel{
+    position: absolute;
+    top: 9px;
+    right: -10px;
+    border-top: 10px solid #aaa;
+    border-right: 10px solid transparent;
+}
+.rightBubble .topLevel{
+    position: absolute;
+    top: 10px;
+    right: -8px;
+    border-top: 10px solid #ffffff;
+    border-right: 10px solid transparent;
+    z-index: 100;
+}
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
