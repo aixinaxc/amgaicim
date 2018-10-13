@@ -1,9 +1,9 @@
 <template>
     <div style="box-sizing: border-box ;position: relative;height: 100%">
-        <div style="width:100vw;height: 36px;background: lightseagreen;text-align: center;padding: 0 5px;line-height: 36px;position: absolute;z-index: 100" @click="displayMore">
-            <span  style="float: left;"><Icon type="ios-arrow-back" size="24"/></span>
-            <span style="font-size: 20px;vertical-align:middle"> jhg</span>
-            <span  style="float: right;"><Icon type="ios-people-outline" size="24" /></span>
+        <div class="topTitle" @click="displayMore">
+            <span  style="float: left;" @click="back"><Icon type="ios-arrow-back" size="24"/></span>
+            <span style="font-size: 20px;vertical-align:middle">{{to_user.name}}</span>
+            <span  style="float: right;" ><Icon type="ios-people-outline" size="24" /></span>
         </div>
         <div ref="imContent" class="im_content" @click="displayMore">
             <!-- Left -->
@@ -169,6 +169,19 @@
             }
         },
         methods:{
+            back: function(){
+                this.$router.go(-1);
+            },
+            gourpNumber: function(){
+                this.$emit('historyMsgList',this.dataH());
+            },
+            dataH : function(){
+                let data = {};
+                data.msgType = this.msg_type;
+                data.fromId = this.from_user.id;
+                data.toId = this.to_user.id;
+                return data;
+            },
             shoeMore: function(){
                 console.log('==============');
                 if(this.more_style == false){
@@ -330,12 +343,23 @@
 
 <style scoped>
     @import '../../assets/css/im.css';
+    .topTitle{
+        width:100vw;
+        height: 36px;
+        text-align: center;
+        padding: 0 5px;
+        line-height: 36px;
+        background: white;
+        position: absolute;
+        border-bottom: #dddddd 1px solid;
+        z-index: 100
+    }
     .im_content {
         width: 100%;
         height: 100%;
         max-height: 100%;
         padding: 45px 1% 80px 1%;
-        background: mediumslateblue;
+        background: #eeeeee;
         word-break: break-all;
         display: inherit; /** 将对象作为伸缩盒子模型显示 **/
         overflow: auto; /** 隐藏超出的内容 **/
