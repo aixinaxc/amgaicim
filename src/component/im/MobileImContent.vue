@@ -19,7 +19,7 @@
                             {{msg.msg_content.text}}
                             </span>
                         <span v-else>
-                            <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 200px;max-height: 150px"  :preview="index"/>
+                            <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 50vw;max-height: 40vw"  :preview="index"/>
                             </span>
                     </div>
                 </div>
@@ -35,18 +35,23 @@
                             {{msg.msg_content.text}}
                             </span>
                         <span v-else>
-                            <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 200px;max-height: 150px" :preview="index"/>
+                            <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 50vw;max-height: 40vw" :preview="index"/>
                             </span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="im_menu">
-            <div style="width: 100%;background: mediumseagreen;" >
+            <div style="width: 100%;height: 80px;" >
+                <input  type="text" style="outline:none;border:none;width: 85vw;height:40px;background: white;float: left;font-size: 16px;padding: 0 6px" v-model="im_text" @click="displayMore"></input>
+                <div style="width: 15vw;background: white;height:40px;color: cornflowerblue;float: right;line-height:40px;text-align: center;font-size: 16px" @click="displayMore">
+                    <span style="margin-right: 5%" @click="sendTxt">发送</span>
+                </div>
+                <div style="border-top: 1px #dddddd solid;width: 96vw;float: left;margin: 0 2vw"></div>
                 <div class="wrapper" >
                     <EmojiPicker @emoji="insert" :search="search">
                         <div class="emoji-invoker" slot="emoji-invoker" slot-scope="{ events }" v-on="events" style="float: left">
-                            <Icon type="ios-happy-outline" size="36" style="margin-left: 5%" @click="shoeMore"/>
+                            <Icon type="ios-happy-outline" size="30"  @click="shoeMore"/>
                         </div>
                         <div slot="emoji-picker" slot-scope="{ emojis, insert, display }" >
                             <div class="emoji-picker" >
@@ -62,13 +67,14 @@
                         </div>
                     </EmojiPicker>
                 </div>
-                <input  type="text" style="outline:none;border:none;width: 75vw;height:48px;background: white;float: left;font-size: 16px;" v-model="im_text" @click="displayMore"></input>
-                <div style="width: 14vw;background: white;height:48px;color: cornflowerblue;float: right;line-height:48px;text-align: center;font-size: 18px">
-                    <span style="margin-right: 5%" @click="sendTxt">发送</span>
+                <div style="width: 16vw;background: white;height:36px;float: left;line-height:36px;;text-align: center" @click="displayMore">
+                    <input type="file" ref="img_file" style="display:none;" @change="sendImg" >
+                    <Icon type="ios-image-outline" size="30" @click="openImgFile" />
                 </div>
+                <div style="height: 36px;width: 68vw;float: left" @click="displayMore"></div>
             </div>
             <div style="height:200px;" v-show="more_style == true" tabindex = "0"  >
-                asdasdasd
+
             </div>
         </div>
     </div>
@@ -229,7 +235,6 @@
             },
             sendTxt: function(){
                 console.log(this.msg_type);
-                this.displayMore();
                 if(this.im_text.length >= 2000){
                     this.$Message.error('内容太长,请改为其他方式发送');
                     return;
@@ -329,7 +334,7 @@
         width: 100%;
         height: 100%;
         max-height: 100%;
-        padding: 45px 1% 40px 1%;
+        padding: 45px 1% 80px 1%;
         background: mediumslateblue;
         word-break: break-all;
         display: inherit; /** 将对象作为伸缩盒子模型显示 **/
@@ -339,12 +344,11 @@
         position: fixed;
         bottom: 0;
         width: 100%;
-        max-height: 48px;
+        min-height: 76px;
         color: #474747;
-        border-top: 1px solid #eee;
-        background-color: darkorchid;
+        background: white;
         align-content: center;
-        max-height: 200px;
+        max-height: 272px;
         z-index: 100;
     }
 
@@ -354,16 +358,16 @@
     .wrapper {
         position: relative;
         display: inline-block;
-        width: 11vw;
+        width: 16vw;
         background: white;
-        height:48px;
+        height:36px;
         float: left;
-        line-height:48px;
+        line-height:36px;
         text-align: center
     }
     .emoji-invoker {
-        width: 1.5rem;
-        height: 1.5rem;
+        width: 16vw;
+        height: 16vw;
         border-radius: 50%;
         cursor: pointer;
         transition: all 0.2s;
@@ -373,12 +377,12 @@
     }
     .emoji-picker {
         position: absolute;
-        top: 48px;
+        top: 40px;
         z-index:2;
         font-size: 16px;
         border-top: 1px solid #ccc;
         width: 100vw;
-        height: 10rem;
+        height: 200px;
         overflow-y: auto;
         padding: 1px;
         box-sizing: border-box;
