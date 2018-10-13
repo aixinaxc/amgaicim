@@ -102,23 +102,20 @@
         components:{
             EmojiPicker
         },
-        props:['im_from_user','im_to_user','is_open','im_base_img_path','im_ws_url','im_msg_type','im_msg_list','im_history_msg_list','im_history_msg_total'],
+        props:['im_from_user','im_to_user','is_open','im_base_img_path','im_ws_url','im_msg_type','im_msg_list'],
         data() {
             return {
                 baseImgUrl: this.im_base_img_path,
                 wsUrl: this.im_ws_url,
-                msg_list:[],
-                history_msg_list:this.im_history_msg_list,
-                Total:this.im_history_msg_total,
-                from_user: {id:'2',name:'bbb'},
-                to_user:{id:'1',name:'aaa'},
-                msg_type:'group',
+                msg_list:this.im_msg_list,
+                from_user: this.im_from_user,
+                to_user:this.im_to_user,
+                msg_type:this.msg_type,
                 im_text: '',
-                im_modal:false,
                 rws:'',
-                show_drawer:false,
                 more_style:false,
                 show_group:true,
+                search:''
             }
         },
         directives: {
@@ -149,14 +146,6 @@
             im_msg_list:function(val){
                 this.msg_list = val;
             },
-            im_history_msg_list: function(val){
-                console.log('im_history_msg_list');
-                console.log(val);
-                this.history_msg_list = val;
-            },
-            im_history_msg_total: function(val){
-                this.Total = val;
-            },
             msg_list: function () {
                 this.$nextTick(() => {
                     this.$refs.imContent.scrollTop = this.$refs.imContent.scrollHeight
@@ -186,11 +175,11 @@
                 this.$router.go(-1);
             },
             gourpNumber: function(){
-                this.$router.push({
+                /*this.$router.push({
                     path:'/mobilIMGroupNumberLIst',
                     query:this.dataH()
-                })
-                //this.$emit('historyMsgList',this.dataH());
+                })*/
+                this.$emit('mobilIMGroupNumberLIst',this.dataH());
             },
             dataH : function(){
                 let data = {};
@@ -212,28 +201,6 @@
                 if(this.more_style == true){
                     this.more_style = false;
                 }
-            },
-            openImMedal: function(){
-                this.im_modal = true;
-            },
-            closeMedal: function(){
-                this.im_modal = false;
-            },
-            openDrawer: function(){
-                this.show_drawer = true;
-                this.$emit('historyMsgList',this.dataH());
-            },
-            dataH : function(){
-                let data = {};
-                data.msgType = this.msg_type;
-                data.fromId = this.from_user.id;
-                data.toId = this.to_user.id;
-                data.pageNum = this.page_num;
-                data.pageSize = this.page_size;
-                return data;
-            },
-            historyMsgList: function(){
-                this.$emit('historyMsgList',this.dataH());
             },
             insert: function(emoji) {
                 console.log(emoji);

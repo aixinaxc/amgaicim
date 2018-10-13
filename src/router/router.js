@@ -1,6 +1,6 @@
 import Login from '../component/login/login.vue';
 import ImList from '../component/im/ImTest.vue';
-import mobilim from '../component/im/MobileImContent.vue'
+import MobileImTest from '../component/im/MobileImTest.vue'
 import mobilIMGroupNumberLIst from   '../component/im/MobileImGroupNumberList.vue'
 export const pageLogin = {
     path: '/',
@@ -16,8 +16,8 @@ export const pageIm = {
 
 export const pageMobileIm = {
     path: '/mobilim',
-    name: 'mobilim',
-    component: mobilim
+    name: 'MobileImTest',
+    component: MobileImTest
 };
 
 export const pageMobilIMGroupNumberLIst = {
