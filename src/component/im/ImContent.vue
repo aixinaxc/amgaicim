@@ -120,6 +120,7 @@
     import ReconnectingWebSocket from 'reconnecting-websocket';
     const browserMD5File = require('browser-md5-file');
     import EmojiPicker from 'vue-emoji-picker';
+    import im from '../../assets/js/im';
     export default {
         name: "list",
         inject:["reload"],
@@ -233,7 +234,7 @@
             WS:function(){
                 this.rws = new ReconnectingWebSocket(this.wsUrl);
                 this.rws.addEventListener('open', () => {
-                    this.msgSend('client','','im_text',this.msgTextContent('连接'));
+                    this.msgSend('client','im_text',im.msgTextContent('连接'));
                     console.log('连接')
                 });
                 this.rws.addEventListener('message', (msg) => {
@@ -261,9 +262,9 @@
                     return;
                 }
                 if(this.msg_type == 'p2p'){
-                    this.msgSend('p2p',this.to_user.id,'im_text',this.msgTextContent(this.im_text));
+                    this.msgSend('p2p','im_text',im.msgTextContent(this.im_text));
                 }else if(this.msg_type == 'group'){
-                    this.msgSend('group',this.to_user.id,'im_text',this.msgTextContent(this.im_text));
+                    this.msgSend('group','im_text',im.msgTextContent(this.im_text));
                 }
                 this.im_text = '';
             },
@@ -302,47 +303,19 @@
                     let arr = [].slice.call(x);
                     console.log(arr);
                     if(_this.msg_type == 'p2p'){
-                        _this.msgSend('p2p',_this.to_user.id,'im_img',_this.msgImgContent(filename,file.length,arr),imgUrl);
+                        _this.msgSend('p2p','im_img',im.msgImgContent(filename,file.length,arr),imgUrl);
                     }else if(_this.msg_type == 'group'){
-                        _this.msgSend('group',_this.to_user.id,'im_img',_this.msgImgContent(filename,file.length,arr),imgUrl);
+                        _this.msgSend('group','im_img',im.msgImgContent(filename,file.length,arr),imgUrl);
                     }
                 }
             },
             msgSend: function (msgType,toUserId,msgContentType,msgContent,fileUrl) {
-                let msg = {};
-                msg.msg_id = utils.uuid();
-                msg.msg_type = msgType;
-                msg.msg_from_id = this.from_user.id;
-                msg.msg_from_content = this.userContent(this.from_user.id,this.from_user.name,this.from_user.icon);
-                msg.created_at = utils.time10();
-                msg.msg_to_id = toUserId;
-                msg.msg_to_content = this.userContent(this.to_user.id,this.to_user.name,this.to_user.icon);
-                msg.msg_content_type = msgContentType;
-                msg.msg_content = msgContent;
+                let msg = im.msg(this.from_user,this.to_user,msgType,msgContentType,msgContent);
                 this.rws.send(JSON.stringify(msg));
                 if(msgType != 'client'){
                     msg.msg_content.file_name = fileUrl;
                     this.msg_list.push(msg);
                 }
-            },
-            userContent:function (id,name,icon) {
-                let userContent = {};
-                userContent.id = id;
-                userContent.name = name;
-                userContent.icon = icon;
-                return userContent;
-            },
-            msgTextContent:function (text) {
-                let msgContent = {};
-                msgContent.text = text;
-                return msgContent;
-            },
-            msgImgContent:function (fileName,fileSize,file) {
-                let msgContent = {};
-                msgContent.file_name = fileName;
-                msgContent.file_size = fileSize;
-                msgContent.file = file;
-                return msgContent;
             }
         }
     }
