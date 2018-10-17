@@ -8,7 +8,7 @@ export default {
         msg.msg_from_id = fromUser.id;
         msg.msg_from_content = this.userContent(fromUser.id,fromUser.name,fromUser.icon);
         msg.created_at = utils.time10();
-        msg.msg_to_id = fromUser.id;
+        msg.msg_to_id = toUser.id;
         msg.msg_to_content = this.userContent(toUser.id,toUser.name,toUser.icon);
         msg.msg_content_type = msgContentType;
         msg.msg_content = msgContent;

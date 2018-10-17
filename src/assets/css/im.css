@@ -118,8 +118,17 @@
 .bubbleItem{
     width: 100%;
 }
-.bubble{
+
+.bubbleIM{
     max-width: 50vw;
+    position: relative;
+    border-radius: 6px;
+    font-size: 14px;
+    padding: 5px 10px;
+    display: inline-block;
+}
+
+.bubble{
     position: relative;
     border-radius: 6px;
     font-size: 14px;
@@ -129,20 +138,20 @@
 .leftBubble{
     position: relative;
     margin-left: 5px;
-    background-color: #f8fdfc;
+    background-color: #D1EEEE;
 }
 .leftBubble .bottomLevel{
     position: absolute;
     top: 9px;
     left: -11px;
-    border-top: 10px solid #00b6b6;
+    border-top: 10px solid #D1EEEE;
     border-left: 10px solid transparent;
 }
 .leftBubble .topLevel{
     position: absolute;
     top: 10px;
     left: -8px;
-    border-top: 10px solid #f8fdfc;
+    border-top: 10px solid #D1EEEE;
     border-left: 10px solid transparent;
     z-index: 100;
 }

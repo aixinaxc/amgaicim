@@ -4,52 +4,52 @@
             <p slot="header" style="text-align:center">
                 <span>{{to_user.name}}</span>
             </p>
-            <div ref="imContent" style="text-align:center;height: 270px;overflow-y: auto;margin-bottom: 10px" >
-                <div v-for="(msg,index) in msg_list">
-                    <!--左侧消息-->
-                    <div  style="float: left;;max-width: 65vw;clear:both;" v-if="msg.msg_from_id !== from_user.id">
+            <div ref="imContent" style="text-align:center;height: 270px;overflow-y: auto;margin: -16px;padding: 10px 5px" >
+                <div v-for="(msg,index) in msg_list" >
+                    <div  style="float: left;text-align: left" v-if="msg.msg_from_id !== from_user.id" >
                         <div style="display:inline-block;vertical-align:top;height: 100%;float: left">
                             <Avatar v-if="msg.msg_from_content.icon == '' || msg.msg_from_content.icon == undefined" icon="ios-person" />
                             <Avatar v-else :src="msg.msg_from_content.icon" />
                         </div>
-                        <div style="display:inline-block;vertical-align:top;max-width: 50vw;margin: 0 0 0 2vw">
+                        <div style="display:inline-block;vertical-align:top;margin: 0 0 0 10px">
                             <div style="margin-left: 8px">
                                 {{msg.msg_from_content.name}}
                             </div>
-                            <div class="bubbleItem " v-if="msg.msg_content_type == 'im_text'">     <!--左侧的泡泡-->
-                                <span class="bubble leftBubble">
+                            <div class="bubbleItem " v-if="msg.msg_content_type == 'im_text'" style="width: 280px">     <!--左侧的泡泡-->
+                                <span class="bubble leftBubble" style="text-align: left">
                                     {{msg.msg_content.text}}
                                     <!--<span class="bottomLevel"></span>-->
-                            <span class="topLevel"></span>
+                            <span class="topLevel" ></span>
                         </span>
                             </div>
                             <div v-else>
-                                <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 50vw;max-height: 40vw"  :preview="index"/>
+                                <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 200px;max-height: 150px"  :preview="index"/>
                             </div>
                         </div>
                     </div>
                     <!--右侧消息-->
-                    <div  style="float: right;;max-width: 65vw;clear:both;margin: 5px 0" v-else>
+                    <div  style="float: right;margin: 5px 0" v-else>
                         <div style="display:inline-block;vertical-align:top;height: 100%;float: right">
                             <Avatar v-if="msg.msg_to_content.icon == '' || msg.msg_to_content.icon == undefined" icon="ios-person" />
                             <Avatar v-else :src="msg.msg_to_content.icon" />
                         </div>
-                        <div style="display:inline-block;vertical-align:top;max-width: 50vw;margin: 0 2vw 0 0">
+                        <div style="display:inline-block;vertical-align:top;margin: 0 10px 0 0">
                             <div style="text-align: right;margin-right: 8px">
                                 {{msg.msg_to_content.name}}
                             </div>
-                            <div class="bubbleItem clearfix" v-if="msg.msg_content_type == 'im_text'">     <!--左侧的泡泡-->
-                                <span class="bubble rightBubble">
-                            {{msg.msg_content.text}}
+                            <div class="bubbleItem " v-if="msg.msg_content_type == 'im_text'" style="width: 280px">     <!--右侧的泡泡-->
+                                <span class="bubble rightBubble" style="background: #eeeeee;text-align: left">
+                                    {{msg.msg_content.text}}
                                     <!--<span class=""></span>-->
-                            <span class="topLevel"></span>
-                        </span>
+                                    <span class="topLevel" style="border-top:10px solid #eeeeee;"></span>
+                                </span>
                             </div>
                             <div v-else>
-                                <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 50vw;max-height: 40vw"  :preview="index"/>
+                                <img :src="imgUrl(msg.msg_content.file_name)" style="max-width: 200px;max-height: 150px"  :preview="index"/>
                             </div>
                         </div>
                     </div>
+                    <div style="clear:both;"></div>
                 </div>
             </div>
             <div slot="footer" style="margin: -5px -16px">
@@ -62,9 +62,6 @@
                         </div>
                         <div slot="emoji-picker" slot-scope="{ emojis, insert, display }" >
                             <div class="emoji-picker" >
-                                <!--<div class="emoji-picker__search">
-                                    <input type="text" v-model="search" v-focus>
-                                </div>-->
                                 <div>
                                     <div v-for="(emojiGroup, category) in emojis" :key="category">
                                         <h5>{{ category }}</h5>
@@ -161,10 +158,14 @@
         computed: {
             imgUrl(){
                 return function(url){
-                    if(url.indexOf("blob") != -1){
-                        return  url;
-                    }else {
-                        return (this.baseImgUrl + url);
+                    console.log('url');
+                    console.log(url);
+                    if(url != undefined){
+                        if(url.indexOf("blob") != -1){
+                            return  url;
+                        }else {
+                            return (this.baseImgUrl + url);
+                        }
                     }
                 }
             }
@@ -234,7 +235,7 @@
             WS:function(){
                 this.rws = new ReconnectingWebSocket(this.wsUrl);
                 this.rws.addEventListener('open', () => {
-                    this.msgSend('client','im_text',im.msgTextContent('连接'));
+                    this.msgSend('client','im_text',im.msgTextContent('连接'),'');
                     console.log('连接')
                 });
                 this.rws.addEventListener('message', (msg) => {
@@ -256,15 +257,19 @@
                 });
             },
             sendTxt: function(){
-                console.log(this.msg_type);
+                console.log('im_text');
+                if(this.im_text.length <= 0){
+                    this.$Message.error('内容不能为空');
+                    return;
+                }
                 if(this.im_text.length >= 2000){
                     this.$Message.error('内容太长,请改为其他方式发送');
                     return;
                 }
                 if(this.msg_type == 'p2p'){
-                    this.msgSend('p2p','im_text',im.msgTextContent(this.im_text));
+                    this.msgSend('p2p','im_text',im.msgTextContent(this.im_text),'');
                 }else if(this.msg_type == 'group'){
-                    this.msgSend('group','im_text',im.msgTextContent(this.im_text));
+                    this.msgSend('group','im_text',im.msgTextContent(this.im_text),'');
                 }
                 this.im_text = '';
             },
@@ -309,11 +314,13 @@
                     }
                 }
             },
-            msgSend: function (msgType,toUserId,msgContentType,msgContent,fileUrl) {
+            msgSend: function (msgType,msgContentType,msgContent,fileUrl) {
                 let msg = im.msg(this.from_user,this.to_user,msgType,msgContentType,msgContent);
                 this.rws.send(JSON.stringify(msg));
                 if(msgType != 'client'){
-                    msg.msg_content.file_name = fileUrl;
+                    if(msgContentType == 'im_img'){
+                        msg.msg_content.file_name = fileUrl;
+                    }
                     this.msg_list.push(msg);
                 }
             }
