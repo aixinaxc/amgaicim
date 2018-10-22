@@ -4,7 +4,21 @@
 
 #### 测试地址：
      web端 ： http://im.amagic.top
+
      移动端： http://im.amagic.top/#/mobilim
+
+
+#### 完成界面：
+             web pc端：
+                     im 聊天界面
+                     im 列表界面
+
+             web 移动端：
+                     im 聊天界面
+                     im 群组成员列表界面
+
+
+
 
 #### 账号密码1：
                 test
@@ -20,16 +34,6 @@
                 browor-md5-file
                 vue-emoji-picker
                 vue-photo-proview
-
-
-#### 完成界面：
-             web pc端：
-                     im 聊天界面
-                     im 列表界面
-
-             web 移动端：
-                     im 聊天界面
-                     im 群组成员列表界面
 
 
 
