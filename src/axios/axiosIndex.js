@@ -4,7 +4,9 @@ import { Message } from 'iview'
 import { router } from '../router/index';
 axios.defaults.baseURL = 'http://192.168.2.223:9001';
 axios.defaults.withCredentials = false;
-axios.defaults.timeout = 100000;
+axios.defaults.timeout = 8*1000;
+axios.defaults.retry = 3;
+axios.defaults.retryDelay = 1000;
 
 // // axios拦截器
 axios.interceptors.request.use(config => {
@@ -53,6 +55,25 @@ axios.interceptors.response.use(response => {
         Message.warning(msg);
         return Promise.reject(response.data.msg);
     }
+},error => {
+    console.log(error.config)
+    if(! error.config || ! error.config.retry) {
+        return Promise.resolve(error.response)
+    }
+    error.config.__retryCount = error.config.__retryCount || 0
+    if(error.config.__retryCount >= error.config.retry) {
+        return Promise.resolve(error.response)
+    } else {
+        error.config.__retryCount += 1
+    }
+    let backoff = new Promise(resolve => {
+        setTimeout(() => {
+            resolve()
+        }, error.config.retryDelay)
+    })
+    return backoff.then(r => {
+        return axios(error.config)
+    })
 });
 
 
